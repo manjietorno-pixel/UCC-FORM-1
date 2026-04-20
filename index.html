@@ -302,9 +302,6 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxI4vQN40mWgpOVdmSegyh-8xwXHwxNAi8d6CWtH4-sxWoBLEuUY2yA5TrOTCL3wsvE/exec') {
-        showStatus('Please add your Google Apps Script URL first.', 'error');
-        return;
       }
 
       submitBtn.disabled = true;
