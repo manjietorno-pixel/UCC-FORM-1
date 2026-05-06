@@ -22,6 +22,7 @@
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
@@ -102,7 +103,7 @@
       font-size: 14px;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
@@ -112,7 +113,7 @@
       background: #fff;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       outline: 2px solid rgba(29, 78, 216, 0.15);
       border-color: var(--accent);
     }
@@ -120,12 +121,6 @@
     textarea {
       min-height: 100px;
       resize: vertical;
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: -2px;
     }
 
     .actions {
@@ -146,7 +141,10 @@
       cursor: pointer;
     }
 
-    button:hover { background: var(--accent-hover); }
+    button:hover {
+      background: var(--accent-hover);
+    }
+
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
@@ -248,7 +246,7 @@
           </div>
           <div class="field">
             <label for="associatePastorContact">Associate Pastor Contact No.</label>
-            <input type="tel" id="associatePastorContact" name="associatePastorContact" placeholder="09xxxxxxxxx or N/A" required />
+            <input type="text" id="associatePastorContact" name="associatePastorContact" placeholder="09xxxxxxxxx or N/A" required />
           </div>
 
           <div class="field">
@@ -277,14 +275,14 @@
           <div id="statusMessage" class="status"></div>
         </div>
         <p class="small" style="margin-top:12px;">
-          Before using this form, replace <strong>YOUR_GOOGLE_APPS_SCRIPT_URL</strong> in the code with your deployed Apps Script web app URL.
+          Your submission will be saved directly to Google Sheets.
         </p>
       </div>
     </form>
   </div>
 
   <script>
-    const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxI4vQN40mWgpOVdmSegyh-8xwXHwxNAi8d6CWtH4-sxWoBLEuUY2yA5TrOTCL3wsvE/exec';
 
     const form = document.getElementById('directoryForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -301,11 +299,6 @@
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
-
-      if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
-        showStatus('Please add your Google Apps Script URL first.', 'error');
-        return;
-      }
 
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
@@ -336,7 +329,7 @@
           body: JSON.stringify(payload)
         });
 
-        const result = await response.json().catch(() => ({}));
+        const result = await response.json();
 
         if (!response.ok || result.status !== 'success') {
           throw new Error(result.message || 'Submission failed.');
@@ -345,7 +338,7 @@
         showStatus('Form submitted successfully.', 'success');
         form.reset();
       } catch (error) {
-        showStatus('Submission failed. Please check your Apps Script setup and try again.', 'error');
+        showStatus('Submission failed. Please check your Apps Script deployment and try again.', 'error');
         console.error(error);
       } finally {
         submitBtn.disabled = false;
